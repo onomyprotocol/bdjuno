@@ -2,6 +2,7 @@ package database
 
 import (
 	"fmt"
+	"math"
 	"time"
 
 	"github.com/forbole/bdjuno/v2/types"
@@ -141,6 +142,10 @@ ON CONFLICT (one_row_id) DO UPDATE
     SET average_time = excluded.average_time, 
         height = excluded.height
 WHERE average_block_time_from_genesis.height <= excluded.height`
+
+	if averageTime < 0 || math.IsInf(averageTime, 1) {
+		averageTime = 0
+	}
 
 	_, err := db.Sqlx.Exec(stmt, averageTime, height)
 	if err != nil {

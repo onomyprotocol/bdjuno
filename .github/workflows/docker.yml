@@ -1,0 +1,38 @@
+name: Docker
+
+on:
+  push:
+    branches:
+      - 'dev'
+
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Generate build number
+        id: buildnumber
+        uses: einaregilsson/build-number@v3
+        with:
+          token: ${{secrets.github_token}}
+
+      - name: Build and push bdjuno
+        uses: docker/build-push-action@v2
+        with:
+          push: true
+          tags: onomy/bdjuno:latest,onomy/bdjuno:v-${{ steps.buildnumber.outputs.build_number }}
+
+      - name: Build and push hasura
+        uses: docker/build-push-action@v2
+        with:
+          push: true
+          file: hasura.Dockerfile
+          tags: onomy/hasura-graphql-engine:latest,onomy/hasura-graphql-engine:v-${{ steps.buildnumber.outputs.build_number }}
