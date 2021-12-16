@@ -1,6 +1,10 @@
 package utils
 
 import (
+	"fmt"
+	"reflect"
+	"runtime"
+
 	"github.com/rs/zerolog/log"
 )
 
@@ -10,6 +14,8 @@ func WatchMethod(method func() error) {
 	go func() {
 		err := method()
 		if err != nil {
+			err = fmt.Errorf("watch method: %s error: %w",
+				runtime.FuncForPC(reflect.ValueOf(method).Pointer()).Name(), err)
 			log.Error().Err(err).Send()
 		}
 	}()

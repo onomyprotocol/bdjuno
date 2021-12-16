@@ -2,8 +2,9 @@
 build/
 
 # Configuration
-*.toml
-*.json
+
+.bdjuno
 
 # Coverage
 coverage.*
+/vendor/

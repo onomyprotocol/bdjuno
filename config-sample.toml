@@ -1,0 +1,60 @@
+
+[cosmos]
+  modules = [
+    "modules",
+    "messages",
+    "auth",
+    "bank",
+    "consensus",
+    "staking",
+    "distribution",
+    "gov",
+    "mint",
+    "pricefeed",
+    "slashing",
+    "staking",
+    "history"
+  ]
+  prefix = "onomy"
+
+[database]
+  host = "postgres"
+  max_idle_connections = 5
+  max_open_connections = 20
+  name = "postgres"
+  password = "password"
+  port = 5432
+  schema = "public"
+  ssl_mode = ""
+  user = "root"
+
+[grpc]
+  address = "http://YOUR_IR:9191"
+  insecure = true
+
+[logging]
+  format = "text"
+  level = "debug"
+
+[parsing]
+  fast_sync = false
+  genesis_file_path = ".bdjuno/genesis.json"
+  listen_new_blocks = true
+  parse_genesis = true
+  parse_old_blocks = true
+  start_height = 1
+  workers = 5
+
+[pruning]
+  interval = 10
+  keep_every = 500
+  keep_recent = 100
+
+[rpc]
+  address = "http://YOUR_IR:26657"
+  client_name = "juno"
+  max_connections = 20
+
+[telemetry]
+  enabled = false
+  port = 500

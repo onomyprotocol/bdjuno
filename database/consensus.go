@@ -142,6 +142,10 @@ ON CONFLICT (one_row_id) DO UPDATE
         height = excluded.height
 WHERE average_block_time_from_genesis.height <= excluded.height`
 
+	if averageTime < 0 {
+		averageTime = 0
+	}
+
 	_, err := db.Sqlx.Exec(stmt, averageTime, height)
 	if err != nil {
 		return fmt.Errorf("error while storing average block time since genesis: %s", err)

@@ -1,17 +1,14 @@
 package main
 
 import (
-	"github.com/cosmos/cosmos-sdk/simapp"
 	"github.com/cosmos/cosmos-sdk/types/module"
-	ibc "github.com/cosmos/ibc-go/modules/core"
 	"github.com/desmos-labs/juno/cmd"
 	parsecmd "github.com/desmos-labs/juno/cmd/parse"
 	"github.com/desmos-labs/juno/modules/messages"
-
-	"github.com/forbole/bdjuno/types/config"
-
 	"github.com/forbole/bdjuno/database"
 	"github.com/forbole/bdjuno/modules"
+	"github.com/forbole/bdjuno/types/config"
+	onomy "github.com/onomyprotocol/onomy/app"
 )
 
 func main() {
@@ -37,10 +34,7 @@ func main() {
 // This should be edited by custom implementations if needed.
 func getBasicManagers() []module.BasicManager {
 	return []module.BasicManager{
-		simapp.ModuleBasics,
-		module.NewBasicManager(
-			ibc.AppModule{},
-		),
+		onomy.ModuleBasics,
 	}
 }
 
