@@ -18,7 +18,7 @@ import (
 )
 
 // HandleMsg handles any message updating the involved accounts
-func HandleMsg(tx *juno.Tx, msg sdk.Msg, getAddresses messages.MessageAddressesParser, cdc codec.Codec, db *database.Db) error {
+func HandleMsg(tx *juno.Tx, msg sdk.Msg, getAddresses messages.MessageAddressesParser, cdc codec.Marshaler, db *database.Db) error {
 	timestamp, err := time.Parse(time.RFC3339, tx.Timestamp)
 	if err != nil {
 		return fmt.Errorf("error while parsing time: %s", err)

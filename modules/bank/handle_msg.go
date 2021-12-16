@@ -18,7 +18,7 @@ import (
 // HandleMsg handles any message updating the involved addresses balances
 func HandleMsg(
 	tx *juno.Tx, msg sdk.Msg, getAddresses messages.MessageAddressesParser, bankClient banktypes.QueryClient,
-	cdc codec.Codec, db *database.Db,
+	cdc codec.Marshaler, db *database.Db,
 ) error {
 	addresses, err := getAddresses(cdc, msg)
 	if err != nil {

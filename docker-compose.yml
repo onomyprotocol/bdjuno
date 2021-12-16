@@ -1,26 +1,53 @@
 version: '3.6'
 services:
   hasura:
-    image: hasura/graphql-engine:v2.0.4
+    # docker build -t onomy/hasura-graphql-engine:latest . -f hasura.Dockerfile
+    image: onomy/hasura-graphql-engine:latest
+    container_name: onomy-hasura-graphql-engine
     ports:
-    - "8080:8080"
+      - "8080:8080"
     restart: always
+    depends_on:
+      - "postgres"
     environment:
+      HASURA_GRAPHQL_UNAUTHORIZED_ROLE: anonymous
       ## this env var can be used to add the above postgres database to Hasura as a data source. this can be removed/updated based on your needs
-      HASURA_GRAPHQL_DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+      HASURA_GRAPHQL_DATABASE_URL: postgres://root:password@postgres:5432/postgres
       ## enable the console served by server
       HASURA_GRAPHQL_ENABLE_CONSOLE: "true" # set to "false" to disable console
       ## enable debugging mode. It is recommended to disable this in production
       HASURA_GRAPHQL_DEV_MODE: "true"
       HASURA_GRAPHQL_ENABLED_LOG_TYPES: startup, http-log, webhook-log, websocket-log, query-log
       ## uncomment next line to set an admin secret
-      # HASURA_GRAPHQL_ADMIN_SECRET: myadminsecretkey
+      HASURA_GRAPHQL_ADMIN_SECRET: myadminsecretkey
+
+  postgres:
+    image: postgres:13.1
+    container_name: onomy-bdjuno-postgres
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-q", "-d", "postgres", "-U", "root" ]
+      timeout: 45s
+      interval: 10s
+      retries: 10
+    restart: always
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=password
+      - APP_DB_USER=docker
+      - APP_DB_PASS=docker
+      - APP_DB_NAME=docker
+    volumes:
+      - ./db:/docker-entrypoint-initdb.d/
+    ports:
+      - 5432:5432
+
   bdjuno:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    # docker build -t onomy/bdjuno:latest .
+    image: onomy/bdjuno:latest
+    container_name: onomy-bdjuno
+    depends_on:
+      - "postgres"
     restart: always
     command: bdjuno parse --home /bdjuno/.bdjuno
     volumes:
-      ## Modify first path to match configuration file.
-      - /bdjuno/.bdjuno:/bdjuno/.bdjuno
+      - .bdjuno:/bdjuno/.bdjuno

@@ -13,7 +13,7 @@ import (
 )
 
 // HandleMsg handles any message updating the involved accounts
-func HandleMsg(msg sdk.Msg, getAddresses messages.MessageAddressesParser, cdc codec.Codec, db *database.Db) error {
+func HandleMsg(msg sdk.Msg, getAddresses messages.MessageAddressesParser, cdc codec.Marshaler, db *database.Db) error {
 	addresses, err := getAddresses(cdc, msg)
 	if err != nil {
 		log.Error().Str("module", "auth").Err(err).
