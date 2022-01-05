@@ -34,4 +34,5 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           push: true
+          file: hasura.Dockerfile
           tags: onomy/hasura-graphql-engine:latest,onomy/hasura-graphql-engine:v-${{ steps.buildnumber.outputs.build_number }}
