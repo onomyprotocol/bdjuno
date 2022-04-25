@@ -3,7 +3,6 @@ package types
 import (
 	"database/sql"
 	"strconv"
-	"time"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
@@ -138,7 +137,7 @@ func (v ValidatorInfoRow) Equal(w ValidatorInfoRow) bool {
 		v.Height == w.Height
 }
 
-//________________________________________________________________
+// --------------------------------------------------------------------------------------------------------------------
 
 // ValidatorDescriptionRow represent a row in validator_description
 type ValidatorDescriptionRow struct {
@@ -209,31 +208,6 @@ func (v ValidatorCommissionRow) Equal(w ValidatorCommissionRow) bool {
 		v.Height == w.Height
 }
 
-// ValidatorCommissionHistoryRow represents a single row of the validator_commission_history table
-type ValidatorCommissionHistoryRow struct {
-	CommissionID int64     `db:"commission_id"`
-	Height       int64     `db:"height"`
-	Timestamp    time.Time `db:"timestamp"`
-}
-
-// NewValidatorCommissionHistoryRow allows to easily build a new ValidatorCommissionHistoryRow instance
-func NewValidatorCommissionHistoryRow(
-	commissionID int64, height int64, timestamp time.Time,
-) ValidatorCommissionHistoryRow {
-	return ValidatorCommissionHistoryRow{
-		CommissionID: commissionID,
-		Height:       height,
-		Timestamp:    timestamp,
-	}
-}
-
-// Equal tells whether v and w represent the same rows
-func (v ValidatorCommissionHistoryRow) Equal(w ValidatorCommissionHistoryRow) bool {
-	return v.CommissionID == w.CommissionID &&
-		v.Height == w.Height &&
-		v.Timestamp.Equal(w.Timestamp)
-}
-
 // ________________________________________________
 
 // ValidatorVotingPowerRow represents a single row of the validator_voting_power database table
@@ -265,15 +239,17 @@ func (v ValidatorVotingPowerRow) Equal(w ValidatorVotingPowerRow) bool {
 type ValidatorStatusRow struct {
 	Status      int    `db:"status"`
 	Jailed      bool   `db:"jailed"`
+	Tombstoned  bool   `db:"tombstoned"`
 	ConsAddress string `db:"validator_address"`
 	Height      int64  `db:"height"`
 }
 
 // NewValidatorStatusRow builds a new ValidatorStatusRow
-func NewValidatorStatusRow(status int, jailed bool, consAddess string, height int64) ValidatorStatusRow {
+func NewValidatorStatusRow(status int, jailed bool, tombstoned bool, consAddess string, height int64) ValidatorStatusRow {
 	return ValidatorStatusRow{
 		Status:      status,
 		Jailed:      jailed,
+		Tombstoned:  tombstoned,
 		ConsAddress: consAddess,
 		Height:      height,
 	}
@@ -283,6 +259,7 @@ func NewValidatorStatusRow(status int, jailed bool, consAddess string, height in
 func (v ValidatorStatusRow) Equal(w ValidatorStatusRow) bool {
 	return v.Status == w.Status &&
 		v.Jailed == w.Jailed &&
+		v.Tombstoned == w.Tombstoned &&
 		v.ConsAddress == w.ConsAddress &&
 		v.Height == w.Height
 }

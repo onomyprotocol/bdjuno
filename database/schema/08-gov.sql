@@ -27,10 +27,10 @@ CREATE INDEX proposal_proposer_address_index ON proposal (proposer_address);
 
 CREATE TABLE proposal_deposit
 (
-    proposal_id       INTEGER REFERENCES proposal (id) NOT NULL,
-    depositor_address TEXT REFERENCES account (address),
+    proposal_id       INTEGER NOT NULL REFERENCES proposal (id),
+    depositor_address TEXT             REFERENCES account (address),
     amount            COIN[],
-    height            BIGINT,
+    height            BIGINT  NOT NULL REFERENCES block (height),
     CONSTRAINT unique_deposit UNIQUE (proposal_id, depositor_address)
 );
 CREATE INDEX proposal_deposit_proposal_id_index ON proposal_deposit (proposal_id);
@@ -42,7 +42,7 @@ CREATE TABLE proposal_vote
     proposal_id   INTEGER NOT NULL REFERENCES proposal (id),
     voter_address TEXT    NOT NULL REFERENCES account (address),
     option        TEXT    NOT NULL,
-    height        BIGINT  NOT NULL,
+    height        BIGINT  NOT NULL REFERENCES block (height),
     CONSTRAINT unique_vote UNIQUE (proposal_id, voter_address)
 );
 CREATE INDEX proposal_vote_proposal_id_index ON proposal_vote (proposal_id);
@@ -52,10 +52,10 @@ CREATE INDEX proposal_vote_height_index ON proposal_vote (height);
 CREATE TABLE proposal_tally_result
 (
     proposal_id  INTEGER REFERENCES proposal (id) PRIMARY KEY,
-    yes          BIGINT NOT NULL,
-    abstain      BIGINT NOT NULL,
-    no           BIGINT NOT NULL,
-    no_with_veto BIGINT NOT NULL,
+    yes          TEXT NOT NULL,
+    abstain      TEXT NOT NULL,
+    no           TEXT NOT NULL,
+    no_with_veto TEXT NOT NULL,
     height       BIGINT NOT NULL,
     CONSTRAINT unique_tally_result UNIQUE (proposal_id)
 );
@@ -65,8 +65,8 @@ CREATE INDEX proposal_tally_result_height_index ON proposal_tally_result (height
 CREATE TABLE proposal_staking_pool_snapshot
 (
     proposal_id       INTEGER REFERENCES proposal (id) PRIMARY KEY,
-    bonded_tokens     BIGINT NOT NULL,
-    not_bonded_tokens BIGINT NOT NULL,
+    bonded_tokens     TEXT   NOT NULL,
+    not_bonded_tokens TEXT   NOT NULL,
     height            BIGINT NOT NULL,
     CONSTRAINT unique_staking_pool_snapshot UNIQUE (proposal_id)
 );

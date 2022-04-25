@@ -3,12 +3,12 @@ package database_test
 import (
 	tmtypes "github.com/tendermint/tendermint/proto/tendermint/types"
 
-	"github.com/forbole/bdjuno/types"
+	"github.com/forbole/bdjuno/v2/types"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 
-	dbtypes "github.com/forbole/bdjuno/database/types"
+	dbtypes "github.com/forbole/bdjuno/v2/database/types"
 )
 
 func newDecPts(value int64, prec int64) *sdk.Dec {
@@ -633,12 +633,14 @@ func (suite *DbTestSuite) TestSaveValidatorStatus() {
 			validator1.GetConsPubKey(),
 			1,
 			false,
+			false,
 			10,
 		),
 		types.NewValidatorStatus(
 			validator2.GetConsAddr(),
 			validator2.GetConsPubKey(),
 			2,
+			true,
 			true,
 			10,
 		),
@@ -654,11 +656,13 @@ func (suite *DbTestSuite) TestSaveValidatorStatus() {
 		dbtypes.NewValidatorStatusRow(
 			1,
 			false,
+			false,
 			validator1.GetConsAddr(),
 			10,
 		),
 		dbtypes.NewValidatorStatusRow(
 			2,
+			true,
 			true,
 			validator2.GetConsAddr(),
 			10,
@@ -676,12 +680,14 @@ func (suite *DbTestSuite) TestSaveValidatorStatus() {
 			validator1.GetConsPubKey(),
 			3,
 			true,
+			true,
 			9,
 		),
 		types.NewValidatorStatus(
 			validator2.GetConsAddr(),
 			validator2.GetConsPubKey(),
 			3,
+			true,
 			true,
 			11,
 		),
@@ -697,11 +703,13 @@ func (suite *DbTestSuite) TestSaveValidatorStatus() {
 		dbtypes.NewValidatorStatusRow(
 			1,
 			false,
+			false,
 			validator1.GetConsAddr(),
 			10,
 		),
 		dbtypes.NewValidatorStatusRow(
 			3,
+			true,
 			true,
 			validator2.GetConsAddr(),
 			11,

@@ -1,31 +1,49 @@
 package main
 
 import (
-	"github.com/cosmos/cosmos-sdk/simapp"
 	"github.com/cosmos/cosmos-sdk/types/module"
-	ibc "github.com/cosmos/ibc-go/modules/core"
-	"github.com/desmos-labs/juno/cmd"
-	parsecmd "github.com/desmos-labs/juno/cmd/parse"
-	"github.com/desmos-labs/juno/modules/messages"
+	"github.com/forbole/juno/v3/cmd"
+	initcmd "github.com/forbole/juno/v3/cmd/init"
+	parsetypes "github.com/forbole/juno/v3/cmd/parse/types"
+	startcmd "github.com/forbole/juno/v3/cmd/start"
+	"github.com/forbole/juno/v3/modules/messages"
 
-	"github.com/forbole/bdjuno/types/config"
+	migratecmd "github.com/forbole/bdjuno/v2/cmd/migrate"
+	parsecmd "github.com/forbole/bdjuno/v2/cmd/parse"
 
-	"github.com/forbole/bdjuno/database"
-	"github.com/forbole/bdjuno/modules"
+	"github.com/forbole/bdjuno/v2/types/config"
+
+	"github.com/forbole/bdjuno/v2/database"
+	"github.com/forbole/bdjuno/v2/modules"
+
+	gaiaapp "github.com/cosmos/gaia/v6/app"
 )
 
 func main() {
-	parseCfg := parsecmd.NewConfig().
+	initCfg := initcmd.NewConfig().
+		WithConfigCreator(config.Creator)
+
+	parseCfg := parsetypes.NewConfig().
 		WithDBBuilder(database.Builder).
-		WithConfigParser(config.Parser).
 		WithEncodingConfigBuilder(config.MakeEncodingConfig(getBasicManagers())).
 		WithRegistrar(modules.NewRegistrar(getAddressesParser()))
 
 	cfg := cmd.NewConfig("bdjuno").
+		WithInitConfig(initCfg).
 		WithParseConfig(parseCfg)
 
 	// Run the command
-	executor := cmd.BuildDefaultExecutor(cfg)
+	rootCmd := cmd.RootCmd(cfg.GetName())
+
+	rootCmd.AddCommand(
+		cmd.VersionCmd(),
+		initcmd.NewInitCmd(cfg.GetInitConfig()),
+		parsecmd.NewParseCmd(cfg.GetParseConfig()),
+		migratecmd.NewMigrateCmd(cfg.GetName(), cfg.GetParseConfig()),
+		startcmd.NewStartCmd(cfg.GetParseConfig()),
+	)
+
+	executor := cmd.PrepareRootCmd(cfg.GetName(), rootCmd)
 	err := executor.Execute()
 	if err != nil {
 		panic(err)
@@ -37,10 +55,7 @@ func main() {
 // This should be edited by custom implementations if needed.
 func getBasicManagers() []module.BasicManager {
 	return []module.BasicManager{
-		simapp.ModuleBasics,
-		module.NewBasicManager(
-			ibc.AppModule{},
-		),
+		gaiaapp.ModuleBasics,
 	}
 }
 

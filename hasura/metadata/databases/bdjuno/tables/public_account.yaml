@@ -1,35 +1,17 @@
 table:
   name: account
   schema: public
+object_relationships:
+- name: vesting_account
+  using:
+    manual_configuration:
+      column_mapping:
+        address: address
+      insertion_order: null
+      remote_table:
+        name: vesting_account
+        schema: public
 array_relationships:
-- name: account_balance_histories
-  using:
-    foreign_key_constraint_on:
-      column: address
-      table:
-        name: account_balance_history
-        schema: public
-- name: account_balances
-  using:
-    foreign_key_constraint_on:
-      column: address
-      table:
-        name: account_balance
-        schema: public
-- name: delegation_rewards
-  using:
-    foreign_key_constraint_on:
-      column: delegator_address
-      table:
-        name: delegation_reward
-        schema: public
-- name: delegations
-  using:
-    foreign_key_constraint_on:
-      column: delegator_address
-      table:
-        name: delegation
-        schema: public
 - name: proposal_deposits
   using:
     foreign_key_constraint_on:
@@ -51,26 +33,19 @@ array_relationships:
       table:
         name: proposal
         schema: public
-- name: redelegations
-  using:
-    foreign_key_constraint_on:
-      column: delegator_address
-      table:
-        name: redelegation
-        schema: public
-- name: unbonding_delegations
-  using:
-    foreign_key_constraint_on:
-      column: delegator_address
-      table:
-        name: unbonding_delegation
-        schema: public
 - name: validator_infos
   using:
     foreign_key_constraint_on:
       column: self_delegate_address
       table:
         name: validator_info
+        schema: public
+- name: vesting_accounts
+  using:
+    foreign_key_constraint_on:
+      column: address
+      table:
+        name: vesting_account
         schema: public
 select_permissions:
 - permission:

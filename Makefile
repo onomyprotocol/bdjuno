@@ -13,10 +13,10 @@ all: lint build test-unit
 ###                                Build flags                              ###
 ###############################################################################
 
-LD_FLAGS = -X github.com/desmos-labs/juno/version.Version=$(VERSION) \
-	-X github.com/desmos-labs/juno/version.Commit=$(COMMIT)
+LD_FLAGS = -X github.com/forbole/juno/v3/cmd.Version=$(VERSION) \
+	-X github.com/forbole/juno/v3/cmd.Commit=$(COMMIT)
+BUILD_FLAGS :=  -ldflags '$(LD_FLAGS)'
 
-BUILD_FLAGS := -ldflags '$(LD_FLAGS)'
 
 ###############################################################################
 ###                                  Build                                  ###
@@ -52,7 +52,7 @@ stop-docker-test:
 
 start-docker-test: stop-docker-test
 	@echo "Starting Docker container..."
-	@docker run --name bdjuno-test-db -e POSTGRES_USER=bdjuno -e POSTGRES_PASSWORD=password -e POSTGRES_DB=bdjuno -d -p 5433:5432 postgres
+	@docker run --name bdjuno-test-db -e POSTGRES_USER=bdjuno -e POSTGRES_PASSWORD=password -e POSTGRES_DB=bdjuno -d -p 6433:5432 postgres
 .PHONY: start-docker-test
 
 test-unit: start-docker-test

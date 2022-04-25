@@ -11,6 +11,15 @@ object_relationships:
       remote_table:
         name: validator_info
         schema: public
+- name: proposal_validator_status_snapshot
+  using:
+    manual_configuration:
+      column_mapping:
+        consensus_address: validator_address
+      insertion_order: null
+      remote_table:
+        name: proposal_validator_status_snapshot
+        schema: public
 array_relationships:
 - name: blocks
   using:
@@ -18,20 +27,6 @@ array_relationships:
       column: proposer_address
       table:
         name: block
-        schema: public
-- name: delegation_rewards
-  using:
-    foreign_key_constraint_on:
-      column: validator_address
-      table:
-        name: delegation_reward
-        schema: public
-- name: delegations
-  using:
-    foreign_key_constraint_on:
-      column: validator_address
-      table:
-        name: delegation
         schema: public
 - name: double_sign_votes
   using:
@@ -46,34 +41,6 @@ array_relationships:
       column: validator_address
       table:
         name: pre_commit
-        schema: public
-- name: redelegationsByDstValidatorAddress
-  using:
-    foreign_key_constraint_on:
-      column: dst_validator_address
-      table:
-        name: redelegation
-        schema: public
-- name: redelegationsBySrcValidatorAddress
-  using:
-    foreign_key_constraint_on:
-      column: src_validator_address
-      table:
-        name: redelegation
-        schema: public
-- name: unbonding_delegations
-  using:
-    foreign_key_constraint_on:
-      column: validator_address
-      table:
-        name: unbonding_delegation
-        schema: public
-- name: validator_commission_amounts
-  using:
-    foreign_key_constraint_on:
-      column: validator_address
-      table:
-        name: validator_commission_amount
         schema: public
 - name: validator_commissions
   using:
@@ -119,13 +86,13 @@ array_relationships:
       table:
         name: validator_voting_power
         schema: public
-computed_fields:
-- comment: ""
-  definition:
-    function:
-      name: self_delegations
-      schema: public
-  name: self_delegations
+- name: proposal_validator_status_snapshots
+  using:
+    foreign_key_constraint_on:
+      column: validator_address
+      table:
+        name: proposal_validator_status_snapshot
+        schema: public
 select_permissions:
 - permission:
     allow_aggregations: true
