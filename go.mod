@@ -22,7 +22,7 @@ require (
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b
 )
 
-require github.com/onomyprotocol/onomy v0.0.7
+require github.com/onomyprotocol/onomy v0.0.9
 
 require (
 	filippo.io/edwards25519 v1.0.0-beta.2 // indirect
